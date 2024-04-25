@@ -1,0 +1,3 @@
+[submodule "ai-tools"]
+	path = ai-tools
+	url = git@gitee.com:ljl3937/ai-tools.git
