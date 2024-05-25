@@ -1,0 +1,9 @@
+mp
+.pytest_cache
+.tox
+.venv
+.coverage
+**/.env
+**/*.db
+**/__pycache__/
+qrcode.png

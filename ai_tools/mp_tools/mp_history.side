@@ -1,0 +1,110 @@
+{
+  "id": "a512ebfc-51a7-4a6b-ac43-3fb9d25ee20c",
+  "version": "2.0",
+  "name": "mp_history",
+  "url": "http://mp.weixin.qq.com/",
+  "tests": [{
+    "id": "64f15b34-8962-4100-bb28-b71527098668",
+    "name": "抓取公众号历史",
+    "commands": [{
+      "id": "bbc57aea-6242-432c-b0e7-b93621de63da",
+      "comment": "",
+      "command": "open",
+      "target": "",
+      "targets": [],
+      "value": "http://mp.weixin.qq.com/"
+    }, {
+      "id": "e45c6fe8-12ff-4330-b917-8d3b8684c133",
+      "comment": "",
+      "command": "click",
+      "target": "css=.new-creation__menu-item:nth-child(2) svg",
+      "targets": [
+        ["css=.new-creation__menu-item:nth-child(2) svg", "css:finder"]
+      ],
+      "value": "",
+      "opensWindow": true,
+      "windowHandleName": "win670",
+      "windowTimeout": 2000
+    }, {
+      "id": "0ef0ac2b-3857-489e-b250-6217320c13a8",
+      "comment": "",
+      "command": "selectWindow",
+      "target": "handle=${win670}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7c286525-07df-42a4-af72-339d21aa97a6",
+      "comment": "",
+      "command": "click",
+      "target": "id=js_editor_insertlink",
+      "targets": [
+        ["id=js_editor_insertlink", "id"],
+        ["css=#js_editor_insertlink", "css:finder"],
+        ["xpath=//li[@id='js_editor_insertlink']", "xpath:attributes"],
+        ["xpath=//ul[@id='js_plugins_list']/li", "xpath:idRelative"],
+        ["xpath=//ul[2]/li", "xpath:position"],
+        ["xpath=//li[contains(.,'超链接')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "f69e61f3-89df-474e-b87a-6b7de6e10bc0",
+      "comment": "",
+      "command": "click",
+      "target": "xpath=//button[contains(.,'选择其他公众号')]",
+      "targets": [
+        ["css=.weui-desktop-link-btn > .weui-desktop-btn", "css:finder"],
+        ["xpath=(//button[@type='button'])[6]", "xpath:attributes"],
+        ["xpath=//div[@id='vue_app']/div[2]/div/div/div[2]/div[2]/form/div[4]/div/div/p/div/button", "xpath:idRelative"],
+        ["xpath=//p/div/button", "xpath:position"],
+        ["xpath=//button[contains(.,'选择其他公众号')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "9793c62e-0354-4f25-a80a-354439fc8150",
+      "comment": "",
+      "command": "type",
+      "target": "css=.weui-desktop-search__wrp .weui-desktop-form__input",
+      "targets": [
+        ["css=.weui-desktop-search__wrp .weui-desktop-form__input", "css:finder"],
+        ["xpath=(//input[@name=''])[5]", "xpath:attributes"],
+        ["xpath=//div[@id='vue_app']/div[2]/div/div/div[2]/div[2]/form/div[4]/div/div/div/div/div/span/input", "xpath:idRelative"],
+        ["xpath=//div/div/div/div/span/input", "xpath:position"]
+      ],
+      "value": "AIGC"
+    }, {
+      "id": "595cef55-176b-42d4-a39f-8c42b66e3433",
+      "comment": "",
+      "command": "sendKeys",
+      "target": "css=.weui-desktop-search__wrp .weui-desktop-form__input",
+      "targets": [
+        ["css=.weui-desktop-search__wrp .weui-desktop-form__input", "css:finder"],
+        ["xpath=(//input[@name=''])[5]", "xpath:attributes"],
+        ["xpath=//div[@id='vue_app']/div[2]/div/div/div[2]/div[2]/form/div[4]/div/div/div/div/div/span/input", "xpath:idRelative"],
+        ["xpath=//div/div/div/div/span/input", "xpath:position"]
+      ],
+      "value": "${KEY_ENTER}"
+    }, {
+      "id": "ce9cd735-2105-44ba-a319-3ad8b87ba712",
+      "comment": "",
+      "command": "click",
+      "target": "css=.inner_link_account_item:nth-child(1) .inner_link_account_wechat",
+      "targets": [
+        ["css=.inner_link_account_item:nth-child(1) .inner_link_account_wechat", "css:finder"],
+        ["xpath=//div[@id='vue_app']/div[2]/div/div/div[2]/div[2]/form/div[4]/div/div/div/div[2]/ul/li/div/i", "xpath:idRelative"],
+        ["xpath=//li/div/i", "xpath:position"],
+        ["xpath=//i[contains(.,'微信号：未设置')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "984c0460-ddc2-4130-9f76-35aa8b5313a2",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["64f15b34-8962-4100-bb28-b71527098668"]
+  }],
+  "urls": ["http://mp.weixin.qq.com/"],
+  "plugins": []
+}
