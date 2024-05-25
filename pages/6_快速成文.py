@@ -43,5 +43,3 @@ def generate_article(background_description, code_snippet):
     # 调用AI模型生成文章标题和内容
     # 这里可以使用任何适合的AI模型，例如GPT-3或Bard
     # 返回生成的文章标题和内容
-    
-

@@ -26,9 +26,9 @@ def generate_image(prompt, model, mode, aspect_ratio, output_format, image_path=
         "output_format": (None, output_format)
     }
     
-    if mode == '文生图':
+    if mode == 'text-to-image':
         files["aspect_ratio"] = (None, aspect_ratio)
-    elif mode == '图生图':
+    elif mode == 'image-to-image':
         if image_path:
             # Ensure the image is read as binary
             files['image'] = (image_path.name, image_path.getvalue(), 'image/png')
@@ -55,12 +55,12 @@ def main1():
     prompt = st.text_input("输入你的提示词：")
 
     # 用户选择生成模式，"text-to-image" 或 "image-to-image"
-    mode = st.selectbox("选择模式：", ["文生图", "图生图"])
+    mode = st.selectbox("选择模式：", ["text-to-image", "image-to-image"])
     
     # 对于 "图生图" 模式，用户可以上传图片并选择变换强度
     image_file = None
     strength = None
-    if mode == '图生图':
+    if mode == 'image-to-image':
         image_file = st.file_uploader("上传你的图片：", type=['png', 'jpg', 'jpeg'])
         strength = st.slider("选择强度 (0.0 到 1.0)：", 0.0, 1.0, 0.5)
     
@@ -115,12 +115,12 @@ def main():
     prompt = st.text_input("输入提示词:")
 
     # 用户选择生成模式，"文生图" 或 "图生图"
-    mode = st.selectbox("选择模式:", ["文生图", "图生图"])
+    mode = st.selectbox("选择模式:", ["text-to-image", "image-to-image"])
     
     # 对于 "图生图" 模式，用户可以上传图片并选择变换强度
     image_file = None
     strength = None
-    if mode == '图生图':
+    if mode == 'image-to-image':
         image_file = st.file_uploader("上传图片:", type=['png', 'jpg', 'jpeg'])
         strength = st.slider("选择强度 (0.0 to 1.0):", 0.0, 1.0, 0.5)
     
