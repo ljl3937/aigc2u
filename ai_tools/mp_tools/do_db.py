@@ -192,12 +192,35 @@ def get_articles_from_mysql():
         like_count = article[7]
         
         # 打印文章信息
-        print(f"ID: {id}, Title: {title}, Author: {author}, Publish Date: {publish_date}, Link: {link}, Summary: {summary}, Read Count: {read_count}, Like Count: {like_count}")
+        print(f"ID: {id}, \nTitle: {title}, \nAuthor: {author}, \nPublish Date: {publish_date}, \nLink: {link}, \nSummary: {summary}, \nRead Count: {read_count}, \nLike Count: {like_count}")
 
     # 关闭连接
     c_mysql.close()
     conn_mysql.close()
     return articles
+
+def get_authors_from_mysql():
+    import mysql.connector
+
+    # 连接到MySQL数据库
+    conn_mysql = mysql.connector.connect(
+        host=os.environ['MYSQL_HOST'],
+        user=os.environ['MYSQL_USER'],
+        password=os.environ['MYSQL_PASSWORD'],
+        database=os.environ['MYSQL_DB']
+    )
+
+    # 创建一个游标对象
+    c_mysql = conn_mysql.cursor()
+
+    # 查询所有作者
+    c_mysql.execute("SELECT DISTINCT author FROM mp_articles")
+    authors = c_mysql.fetchall()
+
+    # 关闭连接
+    c_mysql.close()
+    conn_mysql.close()
+    return authors
 
 
 if __name__ == '__main__':
@@ -209,4 +232,7 @@ if __name__ == '__main__':
     # print(articles)
     # create_mysql_db()
     # move_sqlite_to_mysql()
-    get_articles_from_mysql()
+    # get_articles_from_mysql()
+    authors = get_authors_from_mysql()
+    for author in authors:
+        print(author[0])

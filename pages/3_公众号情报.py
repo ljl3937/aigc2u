@@ -13,6 +13,8 @@ def crew():
     mp_his = Mp_his()
     if st.button("抓取公众号文章"):
         try:
+            mp_his.get_mp_qrcode()
+            st.write("请扫描二维码，并授权登录\n\n![登陆二维码](https://jjbiji-pic.oss-cn-beijing.aliyuncs.com/mp_qrcode.png)")
             mp_his.get_his()
         except Exception as e:
             st.write(f"出现错误：{e}")

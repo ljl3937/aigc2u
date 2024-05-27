@@ -1,3 +1,4 @@
+import subprocess
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -26,8 +27,8 @@ load_dotenv()
 class Mp_his:
     def __init__(self):
         options = Options()
-        # options.add_argument('--headless')
-        # options.add_argument('--disable-gpu')
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
         options.add_argument("--incognito")
         self.driver = webdriver.Chrome(options=options)
         self.vars = {}
@@ -48,7 +49,7 @@ class Mp_his:
         conn.close()
         return result
     
-    def get_his(self):
+    def get_mp_qrcode(self):
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
         self.driver.get("http://mp.weixin.qq.com/")
         self.vars["window_handles"] = self.driver.window_handles
@@ -57,7 +58,34 @@ class Mp_his:
             time.sleep(2)
             qrcode = self.driver.find_element(
                 By.CLASS_NAME, "login__type__container__scan__qrcode")
-            qrcode.screenshot("./qrcode.png")
+            qrcode.screenshot("./mp_qrcode.png")
+            oss_folder = os.getenv("OSS_FOLDER")
+            if os.name == 'posix':
+                # 区分 Linux 和MacOS
+                if os.uname().sysname == 'Darwin':
+                    command = ['ossutil', 'cp', '-f', "mp_qrcode.png", oss_folder]
+                else:
+                    command = ['ossutil64', 'cp', '-f', "mp_qrcode.png", oss_folder]
+            elif os.name == 'nt':
+                command = ['ossutil.exe', 'cp', '-f', "mp_qrcode.png", oss_folder]
+            else:
+                print("Error: Unsupported operating system.")
+                exit(1)
+            
+            subprocess.run(command)
+
+
+    
+    def get_his(self):
+        # os.chdir(os.path.dirname(os.path.abspath(__file__)))
+        # self.driver.get("http://mp.weixin.qq.com/")
+        # self.vars["window_handles"] = self.driver.window_handles
+        # if self.driver.find_elements(By.CLASS_NAME, "login__type__container__scan__qrcode"):
+        #     # 等待二维码出现
+        #     time.sleep(2)
+        #     qrcode = self.driver.find_element(
+        #         By.CLASS_NAME, "login__type__container__scan__qrcode")
+        #     qrcode.screenshot("./qrcode.png")
         # 等待.new-creation__menu-item:nth-child(2) svg出现
         WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(
             (By.CSS_SELECTOR, ".new-creation__menu-item:nth-child(2) svg")))
@@ -84,8 +112,10 @@ class Mp_his:
                 ))
                 self.driver.find_element(
                     By.CSS_SELECTOR, ".inner_link_account_item:nth-child(1)").click()
-                
+                next_tag = False
                 while True:
+                    if next_tag:
+                        break
                     # 循环class 为 .inner_link_article_item的 label 标签
                     for i in range(1, 5):
                         WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(
@@ -102,9 +132,10 @@ class Mp_his:
                         link = label.find_element(
                             By.CSS_SELECTOR, "a").get_attribute("href")
                         # 当发布时间小于昨天，结束循环
-                        # if publish_date < datetime.now() - timedelta(days=7):
-                        #     print("发布时间不在一周内，结束循环")
-                        #     break
+                        if publish_date < datetime.now() - timedelta(days=7):
+                            print("发布时间不在一周内，结束循环")
+                            next_tag = True
+                            break
                         # 数据库里面有这篇文章，结束循环
                         if self.check_exist(link):
                             continue
@@ -122,7 +153,7 @@ class Mp_his:
     "{text}"
     摘要内容:"""
                             prompt = PromptTemplate.from_template(prompt_template)
-                            llm_chain = LLMChain(llm=QianfanChatEndpoint(model="ERNIE-Speed-128K",temperature=0.1), prompt=prompt)
+                            llm_chain = LLMChain(llm=QianfanChatEndpoint(model="ERNIE-Speed",temperature=0.1), prompt=prompt)
                             stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
                             summary = stuff_chain.invoke(texts)["output_text"]
 
