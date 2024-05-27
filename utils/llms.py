@@ -35,14 +35,6 @@ class LLMs:
             llm = Baichuan(baichuan_api_key=os.environ["BAICHUAN_API_KEY"])
             return llm
         elif self.model_name == "qianfan":
-            # {'ERNIE-3.5-8K-0205', 'ERNIE-Speed', 'ERNIE-3.5-4K-0205',
-            # 'ERNIE-Bot', 'Mixtral-8x7B-Instruct', 'ERNIE-3.5-8K-1222',
-            # 'CodeLlama-7b-Instruct', 'ERNIE-Speed-128k', 'Llama-2-13b-chat',
-            # 'XuanYuan-70B-Chat-4bit', 'SQLCoder-7B', 'AquilaChat-7B',
-            # 'Llama-2-7b-chat', 'ERNIE-Bot-turbo', 'BLOOMZ-7B', 'ERNIE-Bot-8k',
-            # 'Qianfan-Chinese-Llama-2-7B', 'Yi-34B-Chat', 'ChatGLM2-6B-32K',
-            # 'EB-turbo-AppBuilder', 'Llama-2-70b-chat', 'ERNIE-Bot-4',
-            # 'Qianfan-BLOOMZ-7B-compressed', 'ChatLaw', 'Qianfan-Chinese-Llama-2-13B'}
             llm = QianfanLLMEndpoint(streaming=True, model="ERNIE-Speed")
             return llm
         elif self.model_name == "mistral":

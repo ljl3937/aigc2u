@@ -1,3 +1,4 @@
 **/*.pyc
 .env
 data_base
+ai_tools/mp_tools/mp_qrcode.png
