@@ -44,11 +44,11 @@ def generate_response(input_text):
     memory = ConversationBufferMemory()
     chain = LLMChain(llm=llm, prompt=prompt, memory=memory)
     # 如果article.md存在，就直接读取，如果不存在，则写入
-    if os.path.exists("article.md"):
-        with open("article.md", "r") as f:
+    if os.path.exists(f"articles/{input_text}.md"):
+        with open(f"articles/{input_text}.md", "r") as f:
             article_markdown = f.read()
     else:
-        with open("article.md", "w") as f:
+        with open(f"articles/{input_text}.md", "w") as f:
             article_markdown = medium_tool.run(input_text)
             f.write(article_markdown)
 
@@ -63,6 +63,9 @@ def generate_response(input_text):
             result = result.split("\n", 1)[1]
             result = result.rsplit("\n", 1)[0]
         chinese_translation += "\n\n" + result
+        title = result.split("\n", 1)[0].split(" ", 1)[1]
+        with open(f"articles/output/{title}.md", "w") as f:
+            f.write(result)
         st.write(result)
 
     # chinese_translation = chain.run(article_markdown)
@@ -87,11 +90,11 @@ def generate_response1(input_text):
     prompt = PromptTemplate(input_variables=["context"], template="{context}")
     
     # 如果article.md存在，就直接读取，如果不存在，则写入
-    if os.path.exists("article.md"):
-        with open("article.md", "r") as f:
+    if os.path.exists(f"articles/{input_text}.md"):
+        with open(f"articles/{input_text}.md", "r") as f:
             article_markdown = f.read()
     else:
-        with open("article.md", "w") as f:
+        with open(f"articles/{input_text}.md", "w") as f:
             medium_tool = med_art.GetMediumTool()
             article_markdown = medium_tool.run(input_text)
             f.write(article_markdown)
@@ -102,10 +105,15 @@ def generate_response1(input_text):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0, separators=["\n\n"])
     texts = text_splitter.split_text(article_markdown)
 
+    chinese_translation = ''
     for text in texts:
         result = chain.run(context=system_prompt + text)
+        chinese_translation += "\n\n" + result
         st.write(result)
-            
+    
+    title = chinese_translation.split("#", 1)[1].split("\n", 1)[0]
+    with open(f"articles/outputs/{title}.md", "w") as f:
+        f.write(result)
     return "翻译完成"
 
 with st.form("my_form"):
