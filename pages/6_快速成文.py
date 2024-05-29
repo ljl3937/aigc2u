@@ -62,7 +62,7 @@ def generate_outline(background, code):
     )
 
     # 定义LLMChain
-    llm = LLMs(model_name="glm-3-turbo", temprature=0.1).get_llm()
+    llm = LLMs(model_name="deepseek", temprature=0.1).get_llm()
     outline_chain = LLMChain(prompt=system_prompt, llm=llm)
 
     # 生成文章
@@ -109,13 +109,18 @@ def generate_paragraph(background, code, outline, finished_paragraph=""):
 
 根据上述信息和已经完成的部分,请续写下一部分内容，不要包含其他部分内容。
 
+## 操作步骤：
+1. 请先检查已经完成的部分是否已经包含文章大纲中的所有部分内容，如果已经包含，请直接返回“文章已完成”。
+2. 根据大纲和已经完成的部分，衔接下一部分内容。
+3. 请使用markdown格式输出。
+
 ## 注意事项：
 - 使用markdown格式输出。
 - 必严格按照大纲要求流程进行。
 - 参照已经完成的部分，不要重复写已经完成的内容。
 - 每次只完成一个标题的内容，且把该部分内容写充实。
 - 语言要通俗易懂，逻辑要清晰。
-- 解析代码的部分要列出代码，且代码引用要准确无误。
+- 解析代码的部分要列出代码，且代码引用要准确无误，代码解析只需解析一遍即可，不要重复解析代码。
 - 每一部分的小标题请不要直接使用大纲中的标题，而是要根据大纲内容自行设计。
 - 如果文章已经完成，请直接返回“文章已完成”，不要再输出其他任何内容。
     """ ,
@@ -123,7 +128,7 @@ def generate_paragraph(background, code, outline, finished_paragraph=""):
 
         )
 
-    llm = LLMs(model_name="glm-3-turbo", temprature=0.1).get_llm()
+    llm = LLMs(model_name="deepseek", temprature=0.1).get_llm()
     article_chain = LLMChain(prompt=system_prompt, llm=llm)
 
     result = article_chain.invoke({"background": background, "code": code, "outline": outline, "finished_paragraph": finished_paragraph})
@@ -150,7 +155,7 @@ def generate_article(background, code):
 if st.button("生成文章"):
     # 调用AI模型生成文章
     title, article = generate_article(background_description, code_snippet)
-    st.write(title)
+    st.write(article)
     st.text_area("文章内容", article, height=500)
 
     # 保存文章到文件

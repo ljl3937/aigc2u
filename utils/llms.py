@@ -43,3 +43,14 @@ class LLMs:
         elif self.model_name == "gemma":
             llm = Ollama(model="gemma:2b")
             return llm
+        elif self.model_name == "deepseek":
+            llm = ChatOpenAI(
+                model_name='deepseek-chat',
+                openai_api_base="https://api.deepseek.com",
+                openai_api_key=os.environ["DEEPSEEK_API_KEY"],
+                max_tokens=1024,
+                streaming=True,
+                temperature=self.temprature,
+                callback_manager=CallbackManager([StreamingStdOutCallbackHandler()])
+            )
+            return llm
