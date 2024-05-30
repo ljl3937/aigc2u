@@ -88,6 +88,9 @@ def generate_response1(input_text):
     """
     
     prompt = PromptTemplate(input_variables=["context"], template="{context}")
+
+    if not os.path.exists("articles/outputs"):
+        os.makedirs("articles/outputs")
     
     # 如果article.md存在，就直接读取，如果不存在，则写入
     if os.path.exists(f"articles/{input_text}.md"):
