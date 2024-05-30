@@ -95,9 +95,15 @@ def generate_response1(input_text):
             article_markdown = f.read()
     else:
         with open(f"articles/{input_text}.md", "w") as f:
-            medium_tool = med_art.GetMediumTool()
-            article_markdown = medium_tool.run(input_text)
-            f.write(article_markdown)
+            try:
+                medium_tool = med_art.GetMediumTool()
+                article_markdown = medium_tool.run(input_text)
+                f.write(article_markdown)
+            except Exception as e:
+                st.error(f"获取文章失败: {e}")
+                # 删除文件
+                os.remove(f"articles/{input_text}.md")
+                return
 
     memory = ConversationBufferMemory()
     chain = LLMChain(llm=llm, prompt=prompt, memory=memory)
