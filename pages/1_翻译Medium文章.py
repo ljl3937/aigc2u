@@ -122,7 +122,7 @@ def generate_response1(input_text):
     
     title = chinese_translation.split("#", 1)[1].split("\n", 1)[0]
     with open(f"articles/outputs/{title}.md", "w") as f:
-        f.write(result)
+        f.write(chinese_translation)
     return "翻译完成"
 
 with st.form("my_form"):
