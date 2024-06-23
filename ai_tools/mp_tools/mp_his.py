@@ -50,6 +50,7 @@ class Mp_his:
         return result
     
     def get_mp_qrcode(self):
+        origin_dir = os.getcwd()
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
         self.driver.get("http://mp.weixin.qq.com/")
         self.vars["window_handles"] = self.driver.window_handles
@@ -73,6 +74,8 @@ class Mp_his:
                 exit(1)
             
             subprocess.run(command)
+        # 切换回原目录
+        os.chdir(origin_dir)
 
 
     
