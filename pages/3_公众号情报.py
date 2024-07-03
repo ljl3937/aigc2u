@@ -1,5 +1,5 @@
 import streamlit as st
-from ai_tools.mp_tools.do_db import *
+from ai_tools.mp_tools.do_mysql import *
 from ai_tools.mp_tools.mp_his import Mp_his
 
 st.title("公众号情报")

@@ -22,6 +22,8 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
+from ai_tools.mp_tools.do_mysql import check_link_exist, add_article
+
 # 加载 .env 文件，假设位于当前脚本的同一目录下
 load_dotenv()
 class Mp_his:
@@ -39,15 +41,6 @@ class Mp_his:
         wh_then = self.vars["window_handles"]
         if len(wh_now) > len(wh_then):
             return set(wh_now).difference(set(wh_then)).pop()
-    
-    def check_exist(self, link):
-        # 检查数据库中是否存在该文章
-        conn = sqlite3.connect("mp1.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM mp_articles WHERE link = ?", (link,))
-        result = cursor.fetchone()
-        conn.close()
-        return result
     
     def get_mp_qrcode(self):
         origin_dir = os.getcwd()
@@ -98,7 +91,7 @@ class Mp_his:
         self.driver.switch_to.window(self.vars["win670"])
         self.driver.find_element(By.ID, "js_editor_insertlink").click()
         # 从mp.csv中读取公众号名称
-        with open('mp.csv', 'r', encoding='utf-8') as f:
+        with open('ai_tools/mp_tools/mp.csv', 'r', encoding='utf-8') as f:
             reader = csv.reader(f)
             for row in reader:
                 self.driver.find_element(
@@ -126,8 +119,13 @@ class Mp_his:
                         label = self.driver.find_element(
                             By.CSS_SELECTOR, f".inner_link_article_item:nth-child({i})")
                         author = row[0]
-                        title = label.find_element(
-                            By.CSS_SELECTOR, "div span:nth-child(2)").text
+                        try:
+                            title = label.find_element(
+                                By.CSS_SELECTOR, "div span:nth-child(2)").text
+                        except:
+                            print("这是一篇小绿书，跳过")
+                            print("label:", label)
+                            continue
                         publish_date_str = label.find_element(
                             By.CSS_SELECTOR, ".inner_link_article_date").text
                         publish_date = datetime.strptime(
@@ -140,7 +138,7 @@ class Mp_his:
                             next_tag = True
                             break
                         # 数据库里面有这篇文章，结束循环
-                        if self.check_exist(link):
+                        if check_link_exist(link):
                             continue
                         
                         summary = ""
@@ -160,32 +158,15 @@ class Mp_his:
                             stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
                             summary = stuff_chain.invoke(texts)["output_text"]
 
-                        # 写入sqlite3
-                        conn = sqlite3.connect('mp1.db')
-                        c = conn.cursor()
-                        # 查询 title 是否已经存在
-                        c.execute("SELECT * FROM mp_articles WHERE title = ?", (title,))
+                        article_dict = {
+                            "title": title,
+                            "author": author,
+                            "publish_date": publish_date,
+                            "link": link, "summary": summary
 
-                        if c.fetchone():
-                            print("title已经存在")
-                            continue
-
-                        c.execute(
-                            "INSERT INTO mp_articles (title, author, publish_date, link, summary) VALUES (?, ?, ?, ?, ?)", (title, author, publish_date, link, summary))
-                        conn.commit()
+                        }
                         # 写入mysql数据库
-                        import mysql.connector
-                        
-                        mydb = mysql.connector.connect(
-                            host=os.environ['MYSQL_HOST'],
-                            user=os.environ['MYSQL_USER'],
-                            password=os.environ['MYSQL_PASSWORD'],
-                            database="mp_articles"
-                        )
-                        mycursor = mydb.cursor()
-                        mycursor.execute(
-                            "INSERT INTO mp_articles (title, author, publish_date, link, summary) VALUES (%s, %s, %s, %s, %s)", (title, author, publish_date, link, summary))
-                        mydb.commit()
+                        add_article(article_dict)
 
                         print(f"{title} 写入成功")
                     try:
