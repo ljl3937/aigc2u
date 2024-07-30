@@ -56,7 +56,7 @@ def generate_outline(background, code):
 用户提供的代码实现:
 {code}
 
-根据上述信息,请生成这篇文章的大纲，用markdown格式表示。
+根据上述信息,请生成这篇文章的大纲，用json树形结构表示，标题用title,描述用description,子级数组用children,最多三级结构。
     """,
         input_variables=["background", "approach", "code"],
     )

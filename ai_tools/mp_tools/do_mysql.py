@@ -92,3 +92,14 @@ def add_article(article_dict):
     finally:
         c_mysql.close()
         close_mysql_connection(conn_mysql)
+
+def get_my_mp_articles(my_name):
+    conn_mysql = get_mysql_connection()
+    c_mysql = conn_mysql.cursor()
+    try:
+        c_mysql.execute("SELECT * FROM mp_articles WHERE author = %s ORDER BY publish_date DESC", (my_name,))
+        articles = c_mysql.fetchall()
+        return articles
+    finally:    
+        c_mysql.close()
+        close_mysql_connection(conn_mysql)
