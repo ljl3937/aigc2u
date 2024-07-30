@@ -92,3 +92,17 @@ def add_article(article_dict):
     finally:
         c_mysql.close()
         close_mysql_connection(conn_mysql)
+
+def get_article_create():
+    # 返回文章表的create语句
+    conn_mysql = get_mysql_connection()
+    c_mysql = conn_mysql.cursor()
+    try:
+        c_mysql.execute("SHOW CREATE TABLE mp_articles")
+        result = c_mysql.fetchone()
+        create_sql = result[1]
+        return create_sql
+    finally:
+        c_mysql.close()
+        close_mysql_connection(conn_mysql)
+        

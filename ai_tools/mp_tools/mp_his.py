@@ -154,9 +154,16 @@ class Mp_his:
     "{text}"
     摘要内容:"""
                             prompt = PromptTemplate.from_template(prompt_template)
-                            llm_chain = LLMChain(llm=QianfanChatEndpoint(model="ERNIE-Speed",temperature=0.1), prompt=prompt)
-                            stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
-                            summary = stuff_chain.invoke(texts)["output_text"]
+                            try:
+                                llm_chain = LLMChain(llm=QianfanChatEndpoint(model="ERNIE-Speed",temperature=0.1), prompt=prompt)
+                                stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
+                                summary = stuff_chain.invoke(texts)["output_text"]
+
+                            except:
+
+                                print("获取摘要失败")
+                                print("prompt:", prompt)
+                                continue
 
                         article_dict = {
                             "title": title,
