@@ -20,7 +20,7 @@ def generate_outline(question):
 用户提供的知乎问题:
 {question}
 
-根据上述信息,请生成这篇文章的大纲，用json树形结构表示，标题用title,描述用description,子级数组用children,最多三级结构。
+根据上述信息,请生成这篇文章的大纲，用json树形结构表示，标题用title,描述用description,子级数组用children,最多二级结构。
     """,
         input_variables=["background", "approach", "code"],
     )
@@ -169,7 +169,15 @@ def generate_article(question):
     return article
 
 
-if st.button("生成文章"):# 调用AI模型生成文章
+if st.button("生成文章"):
+    system_prompt = PromptTemplate(
+            template="""根据以下问题，起一个简短的标题，能够概括文章的主要内容，用于文件名,直接输入标题即可，不要带有任何别的内容。问题：{question}""",
+            input_variables=["question"]
+        )
+    llm = LLMs(model_name="deepseek", temprature=0.1).get_llm()
+    title_chain = LLMChain(prompt=system_prompt, llm=llm)
+    ti = title_chain.invoke({"question": question})
+    ti_str= ti["text"]
     article = generate_article(question)
     st.write(article)
     st.text_area("文章内容", article, height=500)
@@ -178,13 +186,7 @@ if st.button("生成文章"):# 调用AI模型生成文章
     output_folder = "./outputs"
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
-    system_prompt = PromptTemplate(
-            template="""根据以下问题，起一个简短的标题，能够概括文章的主要内容，用于文件名。问题：{question}""",
-            input_variables=["question"]
-        )
-    title = system_prompt.fill_input({"question": question})
-    with open(f"{output_folder}/{question}.md", "w") as file:
+    with open(f"{output_folder}/{ti_str}.md", "w") as file:
         file.write(article)
-    
 
     st.write("文章已保存到文件")

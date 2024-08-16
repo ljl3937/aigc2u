@@ -22,12 +22,13 @@ with st.sidebar:
 
 @traceable
 def generate_response1():
-    llm = LLMs(model_name="glm-3-turbo", temprature=0.7).get_llm()
+    llm = LLMs(model_name="deepseek", temprature=0.7).get_llm()
     
-    system_prompt = """你是一位创业者。我们将进行一次多轮对话,你需要将一篇商业计划书中针对个人用户的部分改掉，改为针对买我们服务的外国公司，尤其是想要来日本投资，做生意的公司。产品改为为企业提供AI定制解决方案，包括AI生成PPT、AI简历、AI培训、AI阅读、AI人力资源等。定价为每年100万日元取消基础版和专业版。
+    system_prompt = """根据提供的文案，重新写一篇适合作为操作教程的文章
     请按照以下规则进行:
-    1. 我会每次提供文章的一部分内容,你需要将其改写，如不需要改写，请保持原文不变，如果完全不符合以上原则，请重写该部分内容。
-    2. 请不要添加任何其他文字即可。
+    1. 我会每次提供文章的一部分内容,你需要将其改写，意思与原文一致，风格更接近白话文。
+    2. 请不要添加任何其他文字，直接开始改写的内容。
+    3. 文中引用的图片不变。
     """
     
     prompt = PromptTemplate(input_variables=["context"], template="{context}")
