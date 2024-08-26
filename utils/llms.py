@@ -65,12 +65,13 @@ class Coze_api:
         headers = {
             'Authorization': self.authorization,
             'Content-Type': 'application/json',
-            'connection': 'keep-alive',
-            'host': 'api.coze.cn',
+            'Connection': 'keep-alive',
+            'Host': 'api.coze.cn',
+            'Accept': '*/*',
         }
         data = {
             "workflow_id": workflow_id,
             "parameters": parameters
         }
-        response = requests.post(self.workflow_url, headers=headers, json={"workflow_id": workflow_id, "data": data})
+        response = requests.post(self.workflow_url, headers=headers, json=data)
         return response.json()
