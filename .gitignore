@@ -6,3 +6,4 @@ ai_tools/mp_tools/mp_qrcode.png
 pages/outputs
 outputs/*
 ai-tools
+tests/my.conf

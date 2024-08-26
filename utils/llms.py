@@ -4,6 +4,7 @@ from langchain_community.llms import QianfanLLMEndpoint
 from langchain_community.llms import Ollama
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+import requests
 import os
 
 
@@ -54,3 +55,22 @@ class LLMs:
                 callback_manager=CallbackManager([StreamingStdOutCallbackHandler()])
             )
             return llm
+    
+class Coze_api:
+    def __init__(self):
+        self.workflow_url = 'https://api.coze.cn/v1/workflow/run'
+        self.authorization = 'Bearer ' + os.environ["COZE_API_KEY"]
+
+    def run_workflow(self, workflow_id, parameters):
+        headers = {
+            'Authorization': self.authorization,
+            'Content-Type': 'application/json',
+            'connection': 'keep-alive',
+            'host': 'api.coze.cn',
+        }
+        data = {
+            "workflow_id": workflow_id,
+            "parameters": parameters
+        }
+        response = requests.post(self.workflow_url, headers=headers, json={"workflow_id": workflow_id, "data": data})
+        return response.json()
