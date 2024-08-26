@@ -4,3 +4,5 @@ data_base
 articles
 ai_tools/mp_tools/mp_qrcode.png
 pages/outputs
+tests/my.conf
+outputs/*
