@@ -29,7 +29,7 @@ load_dotenv()
 class Mp_his:
     def __init__(self):
         options = Options()
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
         options.add_argument('--disable-gpu')
         options.add_argument("--incognito")
         self.driver = webdriver.Chrome(options=options)
@@ -102,16 +102,38 @@ class Mp_his:
                 self.driver.find_element(
                     By.CSS_SELECTOR, ".weui-desktop-search__wrp .weui-desktop-form__input").send_keys(Keys.ENTER)
                 time.sleep(1)
-                # 选择第一个公众号.inner_link_account_item的第一个
-                WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(
-                    (By.CSS_SELECTOR, ".inner_link_account_item:nth-child(1)")
+                # 等待公众号列表加载完成
+                WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located(
+                    (By.CSS_SELECTOR, ".inner_link_account_list")
                 ))
-                self.driver.find_element(
-                    By.CSS_SELECTOR, ".inner_link_account_item:nth-child(1)").click()
+                
+                # 查找匹配的公众号
+                account_items = self.driver.find_elements(By.CSS_SELECTOR, ".inner_link_account_item")
+                matched = False
+                for item in account_items:
+                    nickname = item.find_element(By.CSS_SELECTOR, ".inner_link_account_nickname").text
+                    if nickname == row[0]:
+                        item.click()
+                        matched = True
+                        break
+                
+                # 如果没有找到匹配的公众号，跳过当前循环
+                if not matched:
+                    raise Exception(f"未找到匹配的公众号: {row[0]}，请检查名称是否有误后重新执行程序。")
+                    continue
                 next_tag = False
                 while True:
                     if next_tag:
                         break
+                    # 检查是否有"暂无数据"的提示
+                    try:
+                        no_data_element = self.driver.find_element(By.CSS_SELECTOR, ".weui-desktop-media__list-wrp div")
+                        if no_data_element.text == "暂无数据":
+                            print(f"暂无数据，结束当前公众号({row[0]})的抓取")
+                            break
+                    except:
+                        # 如果没有找到元素，说明可能有数据，继续执行
+                        pass
                     # 循环class 为 .inner_link_article_item的 label 标签
                     for i in range(1, 5):
                         WebDriverWait(self.driver, 60).until(expected_conditions.presence_of_element_located(

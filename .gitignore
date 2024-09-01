@@ -7,3 +7,8 @@ pages/outputs
 outputs/*
 ai-tools
 tests/my.conf
+ai_tools/weibo_crawler/weibo
+log
+ai_tools/weibo_crawler/user_id_list.txt
+ai_tools/weibo_crawler/config.json
+js.json
