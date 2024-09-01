@@ -22,7 +22,7 @@ class LLMs:
                 temperature=self.temprature
             )
             return llm
-        elif self.model_name == "glm-4" or self.model_name == "glm-3-turbo":
+        elif self.model_name == "glm-4" or self.model_name == "glm-3-turbo" or self.model_name == "glm-4-flash":
             llm = ChatOpenAI(
                 model_name=self.model_name,
                 openai_api_base="https://open.bigmodel.cn/api/paas/v4",

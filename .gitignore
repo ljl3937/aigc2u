@@ -12,3 +12,4 @@ log
 ai_tools/weibo_crawler/user_id_list.txt
 ai_tools/weibo_crawler/config.json
 js.json
+.DS_Store

@@ -581,7 +581,7 @@ class Weibo(object):
 
     def handle_download(self, file_type, file_dir, urls, w):
         """处理下载相关操作"""
-        file_prefix = w["created_at"][:11].replace("-", "") + "_" + str(w["id"])
+        file_prefix = w["created_at"][:10].replace("-", "") + "_" + str(w["id"])
         if file_type == "img":
             if "," in urls:
                 url_list = urls.split(",")
