@@ -1,12 +1,6 @@
 from langchain_community.document_loaders import GitHubIssuesLoader
 from langchain_community.document_loaders import GitLoader
 
-# loader = GitHubIssuesLoader(
-#     repo="FujiwaraChoki/MoneyPrinter",
-#     access_token=TOKEN,
-#     branch="main",
-# )
-
 # loader = GitHubLoader(
 #     clone_url="https://github.com/langchain-ai/langchain",
 #     repo_path="./example_data/test_repo/",
