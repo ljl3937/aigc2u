@@ -3,7 +3,7 @@ from langchain_community.document_loaders import GitLoader
 
 # loader = GitHubIssuesLoader(
 #     repo="FujiwaraChoki/MoneyPrinter",
-#     access_token="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",
+#     access_token=TOKEN,
 #     branch="main",
 # )
 
